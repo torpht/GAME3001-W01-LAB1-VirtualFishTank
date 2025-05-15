@@ -23,7 +23,8 @@ public class Boid : MonoBehaviour
         //determine acceleration
         Vector3 acceleration = toTargetNormalized * accelMax;
         
-        rigidBody.linearVelocity -= acceleration * Time.fixedDeltaTime;
+        //Attracts boids to target (change to -= to flee)
+        rigidBody.linearVelocity += acceleration * Time.fixedDeltaTime;
 
         //enforce a top speed
         Vector3 vel = rigidBody.linearVelocity;
