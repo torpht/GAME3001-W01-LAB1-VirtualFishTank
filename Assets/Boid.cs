@@ -10,12 +10,12 @@ public class Boid : MonoBehaviour
 
     private void Start()
     {
-        targetObject = GameObject.Find("target");
+        targetObject = GameObject.Find("target"); //finds target and assigns to variable
         rigidBody = GetComponent<Rigidbody>();
     }
     private void FixedUpdate()
     {
-        //get displacement vector to target
+        //get displacement vector to target (points boid in direction of target)
         Vector3 toTarget = targetObject.transform.position - transform.position;
 
         //normalize

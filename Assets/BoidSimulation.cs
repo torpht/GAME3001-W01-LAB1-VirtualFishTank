@@ -29,7 +29,6 @@ public class BoidSimulationControl : MonoBehaviour
             //Spawn Boids
             GameObject spawnedBoid = Instantiate(boidPrefab, position, rotation);
             boids.Add(spawnedBoid.GetComponent<Boid>());
-            //spawnedBoid.GetComponent<Rigidbody>().linearVelocity = Random.onUnitSphere * 0.3f;
             /*Random Colour*/spawnedBoid.GetComponent<Renderer>().material.SetColor("_BaseColor", Random.ColorHSV(0f, 1f, 0.5f, 1f));
             /*Random Size*/spawnedBoid.transform.localScale *= Random.Range(0.9f, 3f); 
         }        
@@ -43,10 +42,10 @@ public class BoidSimulationControl : MonoBehaviour
         //
         if (Input.GetKeyDown(KeyCode.Alpha2))
             { controlMode = ControlMode.Pursue; }
-        //will spawn food
+        //
         if (Input.GetKeyDown(KeyCode.Alpha3))
             { controlMode = ControlMode.Food; }
-        //will spawn rock obstacle
+        //
         if (Input.GetKeyDown(KeyCode.Alpha4))
             { controlMode = ControlMode.Obstacle; }
     }
