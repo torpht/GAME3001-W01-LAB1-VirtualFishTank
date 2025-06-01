@@ -1,9 +1,13 @@
+using System.Numerics;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
+using Vector3 = UnityEngine.Vector3;
 
 public class Boid : MonoBehaviour
 {
     private GameObject targetObject;
     public Rigidbody rigidBody;
+    public bool arrived = false;
 
     public float speedMax = 4f;
     public float accelMax = 3f;
@@ -64,5 +68,38 @@ public class Boid : MonoBehaviour
 
         Vector3 accel = deltaVel.normalized * acceleration;
         return accel;
+    }
+
+    public Vector3 Arrive(Vector3 target, float acceleration, bool arrive = false)
+    {
+        //Displacement to target
+        Vector3 toTarget = target - transform.position;
+
+        //normalize
+        Vector3 toTargetNormalized = toTarget.normalized;
+
+        //Determine Acceleration
+        Vector3 accel = toTargetNormalized * acceleration;
+
+        while (arrive)
+        { return Vector3.zero;}
+
+        return accel;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+
+        if (collision.gameObject.tag == "Player")
+        {
+            arrived = true;
+            Debug.Log("Target Collision True");
+        }
+        else if (collision.gameObject.tag != "Player")
+        {
+            arrived = false;
+            Debug.Log("Target Collision False");
+        }
+
     }
 }

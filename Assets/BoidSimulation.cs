@@ -9,13 +9,14 @@ public class BoidSimulationControl : MonoBehaviour
         Seek,
         Pursue,
         Food,
-        Obstacle
+        Arrive
     }
 
     //Which mode we are in (selects what mouse buttons do)
     public ControlMode controlMode = ControlMode.Seek;
     
     public GameObject boidPrefab = null;
+    public GameObject foodPrefab = null;
     private GameObject targetObject = null;
     public int numBoidsToSpawn = 10;
     public List<Boid> boids = null;
@@ -53,8 +54,13 @@ public class BoidSimulationControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3))
         { controlMode = ControlMode.Food; }
         //
+        if (Input.GetMouseButtonDown(0) && controlMode == ControlMode.Food)
+        { SpawnFood(); }
+        //
         if (Input.GetKeyDown(KeyCode.Alpha4))
-        { controlMode = ControlMode.Obstacle; }
+        { controlMode = ControlMode.Arrive; }
+        
+        
     }
     private void FixedUpdate()
     {
@@ -79,7 +85,14 @@ public class BoidSimulationControl : MonoBehaviour
             case ControlMode.Pursue:
                 PursueModeControl();
                 break;
+            case ControlMode.Food:
+                FoodModeControl();
+                break;
+            case ControlMode.Arrive:
+                ArriveModeControl();
+                break;
         }
+
     }
 
     private void SeekModeControl()
@@ -118,5 +131,40 @@ public class BoidSimulationControl : MonoBehaviour
                 Debug.DrawRay(boids[i].transform.position, accel, Color.green);
             }
         }
+    }
+
+    private void FoodModeControl()
+    {
+        for (int i = 0; i < boids.Count; i++)
+        {
+            float foodSeekRadius = 0.5f;
+            Collider[] colliders = Physics.OverlapSphere(boids[i].transform.position, foodSeekRadius);
+            foreach (Collider collider in colliders)
+            {
+                Food food = collider.GetComponent<Food>();
+                if (food != null)
+                {
+                    Vector3 accel = boids[i].Arrive(collider.transform.position, boids[i].accelMax, food.arrived);
+                    boids[i].rigidBody.linearVelocity += accel * Time.fixedDeltaTime;
+                    Debug.DrawRay(boids[i].transform.position, accel, Color.green);
+                }
+
+            }
+        }
+    }
+
+    private void ArriveModeControl()
+    {
+        for (int i = 0; i < boids.Count; i++)
+        {
+            Vector3 accel = boids[i].Arrive(targetObject.transform.position, boids[i].accelMax, boids[i].arrived);
+            boids[i].rigidBody.linearVelocity += accel * Time.fixedDeltaTime;
+            Debug.DrawRay(boids[i].transform.position, accel, Color.green);
+        }
+    }
+
+    private void SpawnFood()
+    {
+        Instantiate(foodPrefab, targetObject.transform.position, Random.rotation);
     }
 }
