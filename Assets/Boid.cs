@@ -15,7 +15,7 @@ public class Boid : MonoBehaviour
     private void Start()
     {
         targetObject = GameObject.Find("target"); //finds target and assigns to variable
-        rigidBody = GetComponent<Rigidbody>();
+        rigidBody = GetComponent<Rigidbody>(); //gets rigid body component
     }
 
     private void Update()
